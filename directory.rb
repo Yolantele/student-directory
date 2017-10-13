@@ -1,47 +1,54 @@
-
-## old, hard-coded list of students.
-# lets put all students into an array, so we prevent future dificulaty in updating the code or even worse, nasty bugs running wild inside the code
-#students = [
-#{name: "Dr. Hannibal Lecter", cohort: :november},
-#{name: "Darth Vader", cohort: :november},
-#{name: "Nurse Ratched", cohort: :november},
-#{name: "Michael Corleone", cohort: :november},
-#{name: "Alex DeLarge", cohort: :november},
-#{name: "The Wicked Witch of the West", cohort: :november},
-#{name: "Terminator", cohort: :november},
-#{name: "Freddy Krueger", cohort: :november},
-#{name: "The Joker", cohort: :november},
-#{name: "Joffrey Baratheon", cohort: :november},
-#{name: "Norman Bates", cohort: :november}
-#]
+def rand_month
+  months = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december" ]
+  month = months[rand(months.length)]
+end
 
 def input_students
-  puts "please enter the names of the students"
-  puts "To finish,just hit return twice"
+  puts "please enter the names, previous careers and years of age of the students"
+  puts "To finish,just hit return three times"
   students = []
   name = gets.chomp
-  while !name.empty? do
-    students << {name: name, cohort: :november}
+  career = gets.chomp
+  years = gets.chomp
+  if !name.empty?
+    students << {name: name, cohort: rand_month, prev_career: career, years_old: years}
+    if students.count < 2
+      puts "Now we have #{students.count} student"
+    else students.count > 2
     puts "Now we have #{students.count} students"
+    end
+  elsif name.empty?
+  puts "You haven't entered any students"
+  else
+  puts "please add next student's name, previous career and years of age"
     name = gets.chomp
+    career = gets.chomp
+    years = gets.chomp
   end
   students
   end
 
 def print_header
-  puts "The students of november cohort at Villains Academy"
+  puts "The students of this month's cohort at Makers Academy"
   puts "----------------"
 end
 
 def prints(students)
-  students.each do |student|
-    puts "#{student[:name]} (#{student[:cohort]} cohort)"
+  if students.count == 0
+    puts "...No student entries"
+  else
+  students.each_with_index do |student, index|
+    puts "#{index +=1}. #{student[:name]} (#{student[:cohort]} cohort), previously worked as #{student[:prev_career]}, but decided to change to career in coding at the age of #{student[:years_old]}"
   end
+ end
 end
 
 def print_footer(names) # we print the total number of students here
-puts "Overall, we have #{names.count} great students"
+unless names.count == 0 then
+  puts "Overall, we have #{names.count} great students"
+  end
 end
+
 #calling the methods to activate their function
 students = input_students
 print_header
