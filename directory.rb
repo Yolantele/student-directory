@@ -1,20 +1,35 @@
+
+## old, hard-coded list of students.
 # lets put all students into an array, so we prevent future dificulaty in updating the code or even worse, nasty bugs running wild inside the code
-students = [
-{name: "Dr. Hannibal Lecter", cohort: :november},
-{name: "Darth Vader", cohort: :november},
-{name: "Nurse Ratched", cohort: :november},
-{name: "Michael Corleone", cohort: :november},
-{name: "Alex DeLarge", cohort: :november},
-{name: "The Wicked Witch of the West", cohort: :november},
-{name: "Terminator", cohort: :november},
-{name: "Freddy Krueger", cohort: :november},
-{name: "The Joker", cohort: :november},
-{name: "Joffrey Baratheon", cohort: :november},
-{name: "Norman Bates", cohort: :november}
-]
-#and the print all the students
+#students = [
+#{name: "Dr. Hannibal Lecter", cohort: :november},
+#{name: "Darth Vader", cohort: :november},
+#{name: "Nurse Ratched", cohort: :november},
+#{name: "Michael Corleone", cohort: :november},
+#{name: "Alex DeLarge", cohort: :november},
+#{name: "The Wicked Witch of the West", cohort: :november},
+#{name: "Terminator", cohort: :november},
+#{name: "Freddy Krueger", cohort: :november},
+#{name: "The Joker", cohort: :november},
+#{name: "Joffrey Baratheon", cohort: :november},
+#{name: "Norman Bates", cohort: :november}
+#]
+
+def input_students
+  puts "please enter the names of the students"
+  puts "To finish,just hit return twice"
+  students = []
+  name = gets.chomp
+  while !name.empty? do
+    students << {name: name, cohort: :november}
+    puts "Now we have #{students.count} students"
+    name = gets.chomp
+  end
+  students
+  end
+
 def print_header
-  puts "The students of Villains Academy"
+  puts "The students of november cohort at Villains Academy"
   puts "----------------"
 end
 
@@ -28,6 +43,7 @@ def print_footer(names) # we print the total number of students here
 puts "Overall, we have #{names.count} great students"
 end
 #calling the methods to activate their function
+students = input_students
 print_header
 prints(students)
 print_footer(students)
