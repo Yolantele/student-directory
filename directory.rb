@@ -1,31 +1,34 @@
 @students = [] # an empty array accessible accross all methods.
 
+
 def rand_month
   months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ]
   month = months[rand(months.length)]
 end
 
+def student_count
+  if @students.count < 2
+    puts "Now we have #{@students.count} student"
+  else @students.count > 2
+  puts "Now we have #{@students.count} students"
+  end
+end
+
 def input_students
-  puts "please enter the names, previous careers and years of age of the students"
+  puts "To input the students please enter the names, previous careers and years of age of the students "
   puts "To finish,just hit return three times"
   name = STDIN.gets.chomp
   career = STDIN.gets.chomp
-  years = STDIN.gets.chomp
+  years = STDIN.gets.chomp.to_i
   if !name.empty?
     @students << {name: name, cohort: rand_month, prev_career: career, years_old: years}
-    if @students.count < 2
-      puts "Now we have #{@students.count} student"
-    else @students.count > 2
-    puts "Now we have #{@students.count} students"
-    end
-  elsif name.empty?
-  puts "You haven't entered any students"
-  else
-  puts "please add next student's name, previous career and years of age"
+    student_count
+  else name.empty?
+  puts "You haven't entered any students, please add next student's name, previous career and years of age"
     name = STDIN.gets.chomp
     career = STDIN.gets.chomp
-    years = STDIN.gets.chomp
-  end
+    years = STDIN.gets.chomp.to_i
+   end
   end
 
 def print_header
@@ -38,7 +41,9 @@ def print_students_list
     puts "...No student entries"
   else
   @students.each_with_index do |student, index|
-    puts "#{index +=1}. #{student[:name]} (#{student[:cohort]} cohort), previously worked as #{student[:prev_career]}, but decided to change to career in coding at the age of #{student[:years_old]}"
+    puts "#{index +=1}. #{student[:name]} (#{student[:cohort]} cohort),"
+    puts " previously worked as #{student[:prev_career]}, but decided to"
+    puts "change to career in coding at the age of #{student[:years_old]}"
   end
  end
 end
@@ -49,11 +54,12 @@ unless @students.count == 0 then
   end
 end
 
-def print_menu
+def menu_options
+  puts "Please choose what next you want to do and type in th enumber."
   puts "1. Input the students"
   puts "2. Show the student"
   puts "3. Save the list to students.csv"
-  puts "4. Load the list from students.csv"
+  puts "4. Load the list of students from chosen file"
   puts "9. Exit"
 end
 
@@ -65,16 +71,11 @@ end
 
 def process(selection)
   case selection
-  when "1"
-   input_students
-  when "2"
-   show_students
-  when "3"
-   save_students
-  when "4"
-   load_students
-  when "9"
-   exit #terminates program
+  when "1" then input_students
+  when "2" then show_students
+  when "3" then save_students
+  when "4" then load_students
+  when "9" then exit #terminates program
   else
    puts "I didn't uderstand what you asked for, please try again."
   end
@@ -82,43 +83,50 @@ def process(selection)
 
 def interactive_menu
   loop do
-    print_menu
+    menu_options
     process(STDIN.gets.chomp)
   end
 end
 
 
 def save_students
-  # open the file for writing
-  file = File.open("students.csv", "w")
-  # iterate over the array of students
-  @students.each do |student|
+  puts "Please write the name of the file you want to open"
+  file_name = gets.chomp
+  file = File.open(file_name, "w")
+  @students.each do |student| # iterate over the array of students
     student_data = [student[:name], student[:cohort], student[:prev_career], student[:years_old]]
     csv_line = student_data.join(",")
     file.puts csv_line
   end
   file.close
+  "Students saved!"
 end
 
-def load_students(filename = "students.csv")
+def load_students(filename = gets.chomp)
   file = File.open(filename, "r")
+  puts "Reading students from the file provided"
   file.readlines.each do |line|
-    name, cohort, career, years = line.chomp.split(',')
-    @students << {name: name, cohort: cohort.to_sym, prev_career: career, years_old: years}
-  end
+    name, rand_month, career, years = line.chomp.split(',')
+    @students << {name: name, cohort: rand_month, prev_career: career, years_old: years}
+ end
   file.close
 end
 
 def try_load_students
   filename = ARGV.first #first argument provided from the command line
-  return if filename.nil? # if no filename is provided at all, back out of the method
-  if File.exists?(filename) #if there is a filename provided as an argument and it exists
-    load_students(filename)
+  if filename.nil?
+    puts "Loading the pre-set file..."
+    file = File.open("students.csv")
+    puts "Loaded #{@students.count} from student.csv " # if no filename is provided at all, back out of the method
+  elsif File.exists?(filename) #if there is a filename provided as an argument and it exists
+    puts "loading the #{filename} file..."
+    file = File.open(filename)
     puts " Loaded #{@students.count} from #{filename}"
   else #if the filename provided doesn't exist..
     puts "Sorry, #{filename} you provided doesn't exist"
     exit #quit the program (or just the method in this case?...)
   end
+
 end
 
 try_load_students
