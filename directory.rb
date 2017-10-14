@@ -8,9 +8,9 @@ end
 def input_students
   puts "please enter the names, previous careers and years of age of the students"
   puts "To finish,just hit return three times"
-  name = gets.chomp
-  career = gets.chomp
-  years = gets.chomp
+  name = STDIN.gets.chomp
+  career = STDIN.gets.chomp
+  years = STDIN.gets.chomp
   if !name.empty?
     @students << {name: name, cohort: rand_month, prev_career: career, years_old: years}
     if @students.count < 2
@@ -22,9 +22,9 @@ def input_students
   puts "You haven't entered any students"
   else
   puts "please add next student's name, previous career and years of age"
-    name = gets.chomp
-    career = gets.chomp
-    years = gets.chomp
+    name = STDIN.gets.chomp
+    career = STDIN.gets.chomp
+    years = STDIN.gets.chomp
   end
   end
 
@@ -72,7 +72,7 @@ def process(selection)
   when "3"
    save_students
   when "4"
-   load_students   
+   load_students
   when "9"
    exit #terminates program
   else
@@ -83,7 +83,7 @@ def process(selection)
 def interactive_menu
   loop do
     print_menu
-    process(gets.chomp)
+    process(STDIN.gets.chomp)
   end
 end
 
@@ -100,8 +100,8 @@ def save_students
   file.close
 end
 
-def load_students
-  file = File.open("students.csv", "r")
+def load_students(filename = "students.csv")
+  file = File.open(filename, "r")
   file.readlines.each do |line|
     name, cohort, career, years = line.chomp.split(',')
     @students << {name: name, cohort: cohort.to_sym, prev_career: career, years_old: years}
@@ -109,4 +109,17 @@ def load_students
   file.close
 end
 
+def try_load_students
+  filename = ARGV.first #first argument provided from the command line
+  return if filename.nil? # if no filename is provided at all, back out of the method
+  if File.exists?(filename) #if there is a filename provided as an argument and it exists
+    load_students(filename)
+    puts " Loaded #{@students.count} from #{filename}"
+  else #if the filename provided doesn't exist..
+    puts "Sorry, #{filename} you provided doesn't exist"
+    exit #quit the program (or just the method in this case?...)
+  end
+end
+
+try_load_students
 interactive_menu
